@@ -1,0 +1,124 @@
+% TEMPLATE for Usenix papers, specifically to meet requirements of
+%  USENIX '05
+% originally a template for producing IEEE-format articles using LaTeX.
+%   written by Matthew Ward, CS Department, Worcester Polytechnic Institute.
+% adapted by David Beazley for his excellent SWIG paper in Proceedings,
+%   Tcl 96
+% turned into a smartass generic template by De Clarke, with thanks to
+%   both the above pioneers
+% use at your own risk.  Complaints to /dev/null.
+% make it two column with no page numbering, default is 10 point
+
+% Munged by Fred Douglis <douglis@research.att.com> 10/97 to separate
+% the .sty file from the LaTeX source template, so that people can
+% more easily include the .sty file into an existing document.  Also
+% changed to more closely follow the style guidelines as represented
+% by the Word sample file. 
+
+% Note that since 2010, USENIX does not require endnotes. If you want
+% foot of page notes, don't include the endnotes package in the 
+% usepackage command, below.
+
+\documentclass[letterpaper,twocolumn,10pt]{article}
+\usepackage{usenix,epsfig,endnotes}
+\usepackage{xspace}
+
+\newcommand{\work}{\mbox{\textsc{RADAR}}\xspace}
+
+\begin{document}
+
+%don't want date printed
+\date{}
+
+%make title bold and 14 pt font (Latex default is non-bold, 16 pt)
+\title{\Large \bf \work: Ransomware Auto-Detection At Runtime}
+
+\author{
+{\rm Kimia Saedi}\\
+ks152@rice.edu
+\and
+{\rm Weijie Huang}\\
+wh31@rice.edu
+}
+
+\maketitle
+
+% Use the following at camera-ready time to suppress page numbers.
+% Comment it out when you first submit the paper for review.
+% \thispagestyle{empty}
+
+
+\subsection*{Abstract}
+
+Ransomware attacks have been a huge threat for personal and business data safety. 
+The malicious person usually launches denial-of-access attacks to user files to request for ransom payments.
+As the number of victims increases with the year, it is important to introduce detection methods to avoid property loss in the early stage.
+Recent state-of-art works tend to utilize Cuckoo Sandbox for information gathering.
+In this project, we will propose \work that integrates Intel’s dynamic binary instrumentation framework (Pin) as well to collect more comprehensive data.
+The runtime information will be classified by a supervised learning trained model.
+We will evaluate the performance of \work by the end of this project.
+
+\section{Introduction}
+
+Ransomware is a type of malicious software (i.e., malware) that usually blocks users from controlling the computer or accessing files to request ransom payments.
+It often uses hard-to-crack methods to encrypt files, forcing victims to pay to regain access to their data.
+WannaCry,~\cite{wannacry_2017} one of the most famous ransom attacks in recent times, has caused incalculable damage worldwide, which impacted countless computers in companies, organizations and governments.
+According to a recent survey,~\cite{cybereason_2022} 73\% of the cybersecurity professionals reported that their organization was attacked by ransomware, which is 33\% more than the statistics in 2021.
+Moreover, 63\% of the respondents reported that the attackers might have been lurked in their networks for up to six months, which emphasizes the significance of early detection against potentially malicious behavior.
+
+In recent years, researchers have proposed several patterns, metrics and detection algorithms to identify and/or capture ransomware features.~\cite{Chen2019AutomatedRB, 8051108, Morat2018RansomwareED, Verma2018DefiningAM}
+Most state-of-art works utilize Cuckoo Sandbox,~\cite{CuckooSS} an open-source sandbox tool with powerful logging capabilities, to record and analyze invocations of system APIs.
+However, Cuckoo can only capture high-level interactions, while memory-based operations may also be essential for ransomware identification.
+In this project, we aim to propose \work, an automated ransomware detection tool at run time.
+We will utilize Pin,~\cite{pin} a robust binary instrumentation tool for x86/64 machines, to assist Cuckoo with information gathering.
+Then we will propose a supervised learning model to detect ransomware-like behaviors from the collected runtime features.
+We will evaluate the model with both ransomware and ordinary programs to test the model accuracy.
+
+\section{Background}
+
+A malware detector typically uses static and dynamic analysis techniques to evaluate a sample's behavior and risks. Static analyses are done before execution. Considering that, they struggle to analyze obfuscated code which is the case in most threats. Dynamic analyses have shown better results for malware detection because they track the malware behavior and activities by executing the malware sample. In this work, we use data collected from Cuckoo Sandbox plus Pin in order to run dynamic analysis. 
+
+UNVEIL [25] is a novel dynamic analysis system for detecting ransomware attacks and recognizing their behaviors. UNVEIL is a rule-based detector that monitors access patterns in terms of I/O traces and alarms on ransomware-like behavior while our approach is a data-driven automated ransomware detector based on machine learning techniques.
+
+\section{Design}
+
+Placeholder
+
+\section{Project Plan}
+
+We divide the project into three phases:
+
+\paragraph{Phase 1: Data collection.}
+
+By Oct 21, we will figure out the workflow for raw runtime data, which consists of two parts: Cuckoo logs and instrumented outputs.
+The former one is trivial. For the latter part, We will insert function calls to a runtime library, \textit{LibMemorizer}, to record memory allocations/deallocations/accesses. The runtime data will be dumped into a file for later analysis.
+
+To better observe the program behavior, we need to grasp the information of the function caller.
+We will carry out experiments on Windows, so it is essential to develop an auxiliary tool to parse the symbol table.
+Similar to ELF, Windows executable files have a header structure to identify the file layout.
+This way, we can identify the specific functions who perform probably malicious operations.
+
+\paragraph{Phase 2: Feature extraction.} By Oct 31, we will count the collected data and extract the characteristics that could be fed to the network model.
+In other words, we will provide a ransomware behavior dataset for model detection.
+Then, we will propose and build the network to learn the ransomware patterns from the characteristics by Nov 15.
+
+\paragraph{Phase 3: Training and evaluation.} After building the dataset and network, we will train the model and test the effectiveness of the detection.
+We will try to make efforts to optimize the model performance.
+In the end, we might produce a full workflow for \work.
+
+
+
+{\footnotesize \bibliographystyle{acm}
+\bibliography{sample}}
+
+
+% \theendnotes
+
+\end{document}
+
+
+
+
+
+
+
